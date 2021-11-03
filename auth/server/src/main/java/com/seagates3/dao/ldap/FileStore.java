@@ -35,11 +35,12 @@ class FileStore implements AuthStore {
     }
     catch (FileNotFoundException fe) {
       LOGGER.error(
-          "FileNotFoundException occurred while reading policy file - " + fe);
+          "FileNotFoundException occurred while reading data from file - " +
+          fe);
       savedDataMap = new HashMap<>();
     }
     catch (IOException | ClassNotFoundException e) {
-      LOGGER.error("Exception occurred while reading policy from file - " + e);
+      LOGGER.error("Exception occurred while reading data from file - " + e);
     }
   }
 
@@ -54,7 +55,8 @@ class FileStore implements AuthStore {
       oos.close();
     }
     catch (IOException e) {
-      LOGGER.error("Exception occurred while saving policy into file - " + e);
+      LOGGER.error("Exception occurred while saving data into file - " + e);
+      throw new DataAccessException("Exception occurred while saving file");
     }
   }
 
@@ -85,7 +87,9 @@ class FileStore implements AuthStore {
       oos.close();
     }
     catch (IOException e) {
-      LOGGER.error("Exception occurred while saving policy into file - " + e);
+      LOGGER.error("Exception occurred while saving data into file - " + e);
+      throw new DataAccessException(
+          "Exception occurred while saving data to file");
     }
   }
 }

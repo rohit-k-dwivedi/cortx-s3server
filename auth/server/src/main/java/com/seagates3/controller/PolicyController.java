@@ -53,7 +53,7 @@ public class PolicyController extends AbstractController {
     }
 
     /**
-     * Create new role.
+     * Create new policy
      *
      * @return ServerReponse
      */
@@ -64,6 +64,7 @@ public class PolicyController extends AbstractController {
             policy = policyDAO.find(requestor.getAccount(),
                     requestBody.get("PolicyName"));
         } catch (DataAccessException ex) {
+          LOGGER.error("Failed to create policy");
             return responseGenerator.internalServerError();
         }
 
@@ -100,6 +101,7 @@ public class PolicyController extends AbstractController {
         try {
             policyDAO.save(policy);
         } catch (DataAccessException ex) {
+          LOGGER.error("Exception while saving the policy");
             return responseGenerator.internalServerError();
         }
 
@@ -116,9 +118,12 @@ public class PolicyController extends AbstractController {
         policy = policyDAO.find(requestBody.get("PolicyARN"));
       }
       catch (DataAccessException ex) {
+        LOGGER.error("Failed to find the requested policy in ldap");
         return responseGenerator.internalServerError();
       }
-      if (policy == null || !policy.exists()) {
+      if (policy == null || !policy.exists() ||
+          (!((policy.getARN().split(":")[4])
+                 .equals(requestor.getAccount().getId())))) {
         LOGGER.error("Policy does not exists");
         return responseGenerator.noSuchEntity();
       }
@@ -128,6 +133,8 @@ public class PolicyController extends AbstractController {
         policyDAO.delete (policy);
       }
       catch (DataAccessException ex) {
+        LOGGER.error("Failed to delete requested policy");
+        return responseGenerator.internalServerError();
       }
       return responseGenerator.generateDeleteResponse();
     }
@@ -143,6 +150,7 @@ public class PolicyController extends AbstractController {
         policyList = policyDAO.findAll(requestor.getAccount());
       }
       catch (DataAccessException ex) {
+        LOGGER.error("Failed to list policies");
         return responseGenerator.internalServerError();
       }
       LOGGER.info("Listing policies of account : " +
@@ -161,6 +169,7 @@ public class PolicyController extends AbstractController {
         policy = policyDAO.find(requestBody.get("PolicyARN"));
       }
       catch (DataAccessException ex) {
+        LOGGER.error("Failed to get requested policy");
         return responseGenerator.internalServerError();
       }
       if (policy == null || !policy.exists()) {

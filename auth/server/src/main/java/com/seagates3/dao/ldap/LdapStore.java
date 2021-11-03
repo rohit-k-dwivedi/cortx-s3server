@@ -29,11 +29,17 @@ class LdapStore implements AuthStore {
       method.invoke(instance, obj);
     }
     catch (ClassNotFoundException e) {
+      LOGGER.error("Failed to save ");
+      throw new DataAccessException("failed to save.\n" + e);
     }
     catch (NoSuchMethodException | SecurityException e) {
+      LOGGER.error("Exception while calling method");
+      throw new DataAccessException("failed to call method\n" + e);
     }
     catch (IllegalAccessException | IllegalArgumentException |
            InvocationTargetException | InstantiationException e) {
+      LOGGER.error("Failed to save ");
+      throw new DataAccessException("failed to save.\n" + e);
     }
   }
 
@@ -52,15 +58,17 @@ class LdapStore implements AuthStore {
     }
     catch (ClassNotFoundException e) {
       LOGGER.error("ClassNotFoundException" + e);
+      throw new DataAccessException("failed to find\n" + e);
     }
     catch (NoSuchMethodException | SecurityException e) {
       LOGGER.error("NoSuchMethodException" + e);
+      throw new DataAccessException("failed to find\n" + e);
     }
     catch (IllegalAccessException | IllegalArgumentException |
            InvocationTargetException | InstantiationException e) {
       LOGGER.error("IllegalArgumentException " + e);
+      throw new DataAccessException("failed to find\n" + e);
     }
-    return null;
   }
 
   @Override public List findAll(String strToFind, Object obj,
@@ -76,15 +84,17 @@ class LdapStore implements AuthStore {
     }
     catch (ClassNotFoundException e) {
       LOGGER.error("ClassNotFoundException" + e);
+      throw new DataAccessException("failed in findAll\n" + e);
     }
     catch (NoSuchMethodException | SecurityException e) {
       LOGGER.error("NoSuchMethodException" + e);
+      throw new DataAccessException("failed in findAll\n" + e);
     }
     catch (IllegalAccessException | IllegalArgumentException |
            InvocationTargetException | InstantiationException e) {
       LOGGER.error("IllegalArgumentException " + e);
+      throw new DataAccessException("failed in findAll\n" + e);
     }
-    return null;
   }
 
   @Override public void delete (String key, Object obj,
@@ -101,13 +111,16 @@ class LdapStore implements AuthStore {
     }
     catch (ClassNotFoundException e) {
       LOGGER.error("ClassNotFoundException" + e);
+      throw new DataAccessException("failed while deleting\n" + e);
     }
     catch (NoSuchMethodException | SecurityException e) {
       LOGGER.error("NoSuchMethodException" + e);
+      throw new DataAccessException("failed while deleting\n" + e);
     }
     catch (IllegalAccessException | IllegalArgumentException |
            InvocationTargetException | InstantiationException e) {
       LOGGER.error("IllegalArgumentException " + e);
+      throw new DataAccessException("failed while deleting\n" + e);
     }
   }
 }
